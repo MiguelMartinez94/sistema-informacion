@@ -1,0 +1,56 @@
+<!-- ===============================
+templates/index.html - PÁGINA PRINCIPAL
+=============================== -->
+
+{% extends "base.html" %}
+
+{% block title %}Inicio - Sistema de Mapas Querétaro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="main-header">
+        <h1>Sistema de Mapas Interactivos - Querétaro</h1>
+        <nav class="main-nav">
+            <button onclick="window.location.href='{{ url_for('main.crear_mapa') }}'" class="btn btn-primary">
+                Crear Mapa
+            </button>
+            <button onclick="window.location.href='{{ url_for('main.modificar_mapa') }}'" class="btn btn-secondary">
+                Modificar Mapa
+            </button>
+        </nav>
+    </header>
+    
+    <main class="main-content">
+        <aside class="sidebar">
+            <h2>Indicadores</h2>
+            <div class="indicadores-list">
+                {% for mapa in mapas %}
+                    <button onclick="verMapa({{ mapa.id }})" class="indicator-btn" data-mapa-id="{{ mapa.id }}">
+                        {{ mapa.nombre }}
+                    </button>
+                {% endfor %}
+                
+                {% if not mapas %}
+                    <p class="no-indicadores">No hay indicadores creados aún.</p>
+                {% endif %}
+            </div>
+        </aside>
+        
+        <section class="map-section">
+            <div class="map-container">
+                <div id="mapa-principal">
+                    {% include 'components/mapa_svg.html' %}
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function verMapa(mapaId) {
+        window.location.href = `/ver/${mapaId}`;
+    }
+</script>
+{% endblock %}

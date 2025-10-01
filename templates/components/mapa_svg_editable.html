@@ -1,0 +1,44 @@
+<!-- ===============================
+templates/components/mapa_svg_editable.html - SVG EDITABLE
+=============================== -->
+
+<svg id="mapa-edicion-svg" viewBox="0 0 800 600" class="mapa-svg editable">
+    <defs>
+        <style>
+            .municipio-editable {
+                fill: #ffffff;
+                stroke: #cccccc;
+                stroke-width: 1;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .municipio-editable:hover {
+                stroke: #666666;
+                stroke-width: 2;
+            }
+            .municipio-seleccionado {
+                stroke: #007bff !important;
+                stroke-width: 3 !important;
+            }
+        </style>
+    </defs>
+    
+    <path id="edit-landaDematamoros" class="municipio-editable" d="..." onclick="seleccionarMunicipio('landaDematamoros')"></path>
+    <path id="edit-arroyoSeco" class="municipio-editable" d="..." onclick="seleccionarMunicipio('arroyoSeco')"></path>
+    <path id="edit-sanJoaquin" class="municipio-editable" d="..." onclick="seleccionarMunicipio('sanJoaquin')"></path>
+    <path id="edit-cadereytaDemontes" class="municipio-editable" d="..." onclick="seleccionarMunicipio('cadereytaDemontes')"></path>
+    <path id="edit-ezequielMontes" class="municipio-editable" d="..." onclick="seleccionarMunicipio('ezequielMontes')"></path>
+    <path id="edit-colon" class="municipio-editable" d="..." onclick="seleccionarMunicipio('colon')"></path>
+    <path id="edit-tequisquiapan" class="municipio-editable" d="..." onclick="seleccionarMunicipio('tequisquiapan')"></path>
+    <path id="edit-huimilpan" class="municipio-editable" d="..." onclick="seleccionarMunicipio('huimilpan')"></path>
+    <path id="edit-amealcoDeBonfil" class="municipio-editable" d="..." onclick="seleccionarMunicipio('amealcoDeBonfil')"></path>
+    <path id="edit-sanJuanDelRio" class="municipio-editable" d="..." onclick="seleccionarMunicipio('sanJuanDelRio')"></path>
+    <path id="edit-pedroEscobedo" class="municipio-editable" d="..." onclick="seleccionarMunicipio('pedroEscobedo')"></path>
+    <path id="edit-corregidora" class="municipio-editable" d="..." onclick="seleccionarMunicipio('corregidora')"></path>
+    <path id="edit-queretaro" class="municipio-editable" d="..." onclick="seleccionarMunicipio('queretaro')"></path>
+    <path id="edit-elMarques" class="municipio-editable" d="..." onclick="seleccionarMunicipio('elMarques')"></path>
+    <path id="edit-toliman" class="municipio-editable" d="..." onclick="seleccionarMunicipio('toliman')"></path>
+    <path id="edit-penamiller" class="municipio-editable" d="..." onclick="seleccionarMunicipio('penamiller')"></path>
+    <path id="edit-pinalDeAmoles" class="municipio-editable" d="..." onclick="seleccionarMunicipio('pinalDeAmoles')"></path>
+    <path id="edit-jalpanDeSerra" class="municipio-editable" d="..." onclick="seleccionarMunicipio('jalpanDeSerra')"></path>
+</svg>

@@ -1,0 +1,91 @@
+<!-- ===============================
+templates/crear_mapa.html - CREAR MAPA
+=============================== -->
+
+{% extends "base.html" %}
+
+{% block title %}Crear Mapa - Sistema de Mapas Querétaro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <button onclick="window.location.href='{{ url_for('main.index') }}'" class="btn btn-back">
+            ← Volver
+        </button>
+        <div class="header-center">
+            <input type="text" id="nombre-mapa" placeholder="Nombre del indicador" class="map-name-input">
+        </div>
+        <button onclick="guardarMapa()" class="btn btn-success" id="btn-guardar">
+            Guardar Mapa
+        </button>
+    </header>
+    
+    <main class="create-content">
+        <section class="map-edit-section">
+            <h2>Mapa en Construcción</h2>
+            <div class="map-edit-container">
+                <div id="mapa-edicion">
+                    {% include 'components/mapa_svg_editable.html' %}
+                </div>
+                <div id="municipio-status">
+                    <p>Selecciona un municipio para editarlo</p>
+                </div>
+            </div>
+        </section>
+        
+        <aside class="edit-sidebar">
+            <div class="config-panel">
+                <h3>Configurar Municipio</h3>
+                <form id="form-municipio">
+                    <input type="hidden" id="municipio-actual" value="">
+                    
+                    <div class="form-group">
+                        <label for="color-municipio">Color:</label>
+                        <input type="color" id="color-municipio" value="#ffffff" class="color-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="info-municipio">Información:</label>
+                        <textarea id="info-municipio" rows="4" placeholder="Escribe la información del municipio" class="info-textarea"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imagen-municipio">Imagen:</label>
+                        <input type="file" id="imagen-municipio" accept="image/*" class="file-input">
+                        <div id="preview-imagen"></div>
+                    </div>
+                    
+                    <button type="button" onclick="aplicarConfiguracion()" class="btn btn-apply">
+                        Aplicar
+                    </button>
+                </form>
+            </div>
+            
+            <div class="table-generator">
+                <h3>Generar Tabla</h3>
+                <div class="form-group">
+                    <label for="num-filas">Filas:</label>
+                    <input type="number" id="num-filas" value="3" min="1" max="20" class="number-input">
+                </div>
+                
+                <div class="form-group">
+                    <label for="num-columnas">Columnas:</label>
+                    <input type="number" id="num-columnas" value="3" min="1" max="10" class="number-input">
+                </div>
+                
+                <button onclick="generarTabla()" class="btn btn-generate">
+                    Generar Tabla
+                </button>
+                
+                <div id="tabla-container">
+                    <!-- La tabla se genera aquí dinámicamente -->
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/crear_mapa.js') }}"></script>
+{% endblock %}

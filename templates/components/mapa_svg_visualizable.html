@@ -1,0 +1,94 @@
+<!-- ===============================
+templates/components/mapa_svg_visualizable.html - SVG VISUALIZABLE
+=============================== -->
+
+<svg id="mapa-visualizacion-svg" viewBox="0 0 800 600" class="mapa-svg visualizable">
+    <defs>
+        <style>
+            .municipio-visualizable {
+                stroke: #ffffff;
+                stroke-width: 1;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .municipio-visualizable:hover {
+                stroke: #333333;
+                stroke-width: 2;
+                filter: brightness(1.1);
+            }
+        </style>
+    </defs>
+    
+    <path id="view-landaDematamoros" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('landaDematamoros', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-arroyoSeco" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('arroyoSeco', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-sanJoaquin" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('sanJoaquin', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-cadereytaDemontes" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('cadereytaDemontes', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-ezequielMontes" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('ezequielMontes', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-colon" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('colon', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-tequisquiapan" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('tequisquiapan', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-huimilpan" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('huimilpan', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-amealcoDeBonfil" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('amealcoDeBonfil', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-sanJuanDelRio" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('sanJuanDelRio', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-pedroEscobedo" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('pedroEscobedo', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-corregidora" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('corregidora', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-queretaro" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('queretaro', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-elMarques" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('elMarques', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-toliman" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('toliman', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-penamiller" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('penamiller', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-pinalDeAmoles" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('pinalDeAmoles', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+    <path id="view-jalpanDeSerra" class="municipio-visualizable" d="..." 
+          onmouseover="mostrarInfo('jalpanDeSerra', event)" 
+          onmouseout="ocultarInfo()" 
+          onmousemove="moverTooltip(event)"></path>
+</svg>

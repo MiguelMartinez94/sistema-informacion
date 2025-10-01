@@ -1,0 +1,48 @@
+<!-- ===============================
+templates/visualizar_mapa.html - VISUALIZAR MAPA
+=============================== -->
+
+{% extends "base.html" %}
+
+{% block title %}{{ mapa.nombre }} - Sistema de Mapas Querétaro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="view-header">
+        <button onclick="window.location.href='{{ url_for('main.index') }}'" class="btn btn-back">
+            ← Volver
+        </button>
+        <h1 class="indicator-title">{{ mapa.nombre }}</h1>
+    </header>
+    
+    <main class="view-content">
+        <section class="map-view-section">
+            <div class="map-view-container">
+                <div id="mapa-visualizacion" data-mapa-id="{{ mapa_id }}">
+                    {% include 'components/mapa_svg_visualizable.html' %}
+                </div>
+                
+                <!-- Tooltip para mostrar información -->
+                <div id="tooltip-municipio" class="tooltip">
+                    <h4 id="tooltip-nombre"></h4>
+                    <p id="tooltip-info"></p>
+                    <img id="tooltip-imagen" alt="" class="tooltip-image">
+                </div>
+            </div>
+        </section>
+        
+        <aside class="data-sidebar">
+            <div class="data-panel">
+                <h3>Datos Estadísticos</h3>
+                <div id="tabla-estadisticas">
+                    <!-- La tabla se carga dinámicamente -->
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/visualizar_mapa.js') }}"></script>
+{% endblock %}

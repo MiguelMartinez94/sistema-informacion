@@ -1,0 +1,94 @@
+<!-- ===============================
+templates/modificar_mapa.html - MODIFICAR MAPA
+=============================== -->
+
+{% extends "base.html" %}
+
+{% block title %}Modificar Mapa - Sistema de Mapas Querétaro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <button onclick="window.location.href='{{ url_for('main.index') }}'" class="btn btn-back">
+            ← Volver
+        </button>
+        <h2>Modificar Mapa Existente</h2>
+    </header>
+    
+    <main class="modify-content">
+        {% if not mapa_id %}
+        <!-- Selector de mapa -->
+        <div class="map-selector">
+            <h3>Seleccionar Indicador a Modificar</h3>
+            <select id="mapas-existentes" class="map-select">
+                <option value="">-- Selecciona un indicador --</option>
+                {% for mapa in mapas %}
+                    <option value="{{ mapa.id }}">{{ mapa.nombre }}</option>
+                {% endfor %}
+            </select>
+            <button onclick="cargarMapaParaModificar()" class="btn btn-load">
+                Cargar Mapa
+            </button>
+        </div>
+        {% else %}
+        <!-- Interfaz de modificación -->
+        <div class="modify-interface">
+            <section class="map-modify-section">
+                <div class="header-controls">
+                    <input type="text" id="nombre-mapa-modificar" value="{{ mapa.nombre }}" class="map-name-input">
+                    <button onclick="guardarModificaciones()" class="btn btn-success">
+                        Guardar Modificaciones
+                    </button>
+                </div>
+                
+                <div class="map-modify-container">
+                    <div id="mapa-modificacion" data-mapa-id="{{ mapa_id }}">
+                        {% include 'components/mapa_svg_editable.html' %}
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="modify-sidebar">
+                <div class="config-panel">
+                    <h3>Modificar Municipio</h3>
+                    <form id="form-municipio-modificar">
+                        <input type="hidden" id="municipio-actual-modificar" value="">
+                        
+                        <div class="form-group">
+                            <label for="color-municipio-modificar">Color:</label>
+                            <input type="color" id="color-municipio-modificar" class="color-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="info-municipio-modificar">Información:</label>
+                            <textarea id="info-municipio-modificar" rows="4" class="info-textarea"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="imagen-municipio-modificar">Imagen:</label>
+                            <input type="file" id="imagen-municipio-modificar" accept="image/*" class="file-input">
+                            <div id="preview-imagen-modificar"></div>
+                        </div>
+                        
+                        <button type="button" onclick="aplicarModificacion()" class="btn btn-apply">
+                            Aplicar Cambios
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="table-modify">
+                    <h3>Modificar Tabla</h3>
+                    <div id="tabla-modificacion">
+                        <!-- Tabla editable cargada con datos existentes -->
+                    </div>
+                </div>
+            </aside>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/modificar_mapa.js') }}"></script>
+{% endblock %}
