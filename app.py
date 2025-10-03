@@ -2,7 +2,7 @@
 # app.py - APLICACIÓN PRINCIPAL
 # ===============================
 
-from flask import Flask, render_template
+from flask import Flask, send_from_directory
 from models.database import init_db
 from controllers.main import main_bp
 from controllers.maps import maps_bp
@@ -21,10 +21,16 @@ def create_app():
     app.register_blueprint(maps_bp, url_prefix='/maps')
     app.register_blueprint(api_bp, url_prefix='/api')
     
-    # Crear directorios necesarios
-    os.makedirs('static/images/municipios', exist_ok=True)
-    os.makedirs('uploads', exist_ok=True)
+    # Crear el directorio de subidas si no existe
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
+    # --- AÑADIR ESTA NUEVA RUTA ---
+    # Esta ruta servirá los archivos desde la carpeta UPLOAD_FOLDER
+    @app.route('/uploads/<path:filename>')
+    def uploaded_file(filename):
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    # --- FIN DE LA NUEVA RUTA ---
+
     return app
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 # blueprints/main/routes.py
 # ===============================
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from controllers.main import main_bp
 from models.models import Mapa, Municipio
 
@@ -10,15 +10,15 @@ from models.models import Mapa, Municipio
 def index():
     """Página principal"""
     mapas = Mapa.obtener_todos()
-    municipios = Municipio.obtener_todos()
-    return render_template('index.html', mapas=mapas, municipios=municipios)
+    return render_template('index.html', mapas=mapas)
 
 @main_bp.route('/crear')
 def crear_mapa():
-    """Interfaz para crear mapa"""
+    """Interfaz para crear un nuevo mapa."""
     municipios = Municipio.obtener_todos()
-    return render_template('crear_mapa.html', municipios=municipios)
+    return render_template('editor_mapa.html', mapa=None, municipios=municipios)
 
+# --- ESTA ES LA FUNCIÓN QUE FALTABA ---
 @main_bp.route('/ver/<int:mapa_id>')
 def ver_mapa(mapa_id):
     """Interfaz para visualizar mapa"""
@@ -27,20 +27,21 @@ def ver_mapa(mapa_id):
         return redirect(url_for('main.index'))
     
     return render_template('visualizar_mapa.html', mapa=mapa, mapa_id=mapa_id)
+# --- FIN DE LA FUNCIÓN QUE FALTABA ---
 
 @main_bp.route('/modificar')
 def modificar_mapa():
-    """Interfaz para modificar mapa"""
+    """Página para seleccionar qué mapa modificar."""
     mapas = Mapa.obtener_todos()
-    municipios = Municipio.obtener_todos()
-    return render_template('modificar_mapa.html', mapas=mapas, municipios=municipios)
+    return render_template('modificar_mapa.html', mapas=mapas)
 
 @main_bp.route('/modificar/<int:mapa_id>')
 def modificar_mapa_especifico(mapa_id):
-    """Interfaz para modificar mapa específico"""
+    """Interfaz para modificar un mapa específico."""
     mapa = Mapa.obtener_por_id(mapa_id)
     if not mapa:
+        flash('Mapa no encontrado', 'error')
         return redirect(url_for('main.index'))
     
     municipios = Municipio.obtener_todos()
-    return render_template('modificar_mapa.html', mapa=mapa, municipios=municipios, mapa_id=mapa_id)
+    return render_template('editor_mapa.html', mapa=mapa, municipios=municipios)

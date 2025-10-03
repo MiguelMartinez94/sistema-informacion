@@ -2,59 +2,41 @@
 // static/js/visualizar_mapa.js
 // ===============================
 
-// Variables globales para visualización
-let datosMapaActual = null;
-let configuracionesMunicipiosVisualizacion = {};
-
-// Mostrar información del municipio
-function mostrarInfo(municipioId, event) {
-    const tooltip = document.getElementById('tooltip-municipio');
-    const config = configuracionesMunicipiosVisualizacion[municipioId];
-    
-    if (config) {
-        document.getElementById('tooltip-nombre').textContent = getNombreMunicipio(municipioId);
-        document.getElementById('tooltip-info').textContent = config.informacion || 'Sin información disponible';
-        
-        const imagen = document.getElementById('tooltip-imagen');
-        if (config.imagen_url) {
-            imagen.src = config.imagen_url;
-            imagen.style.display = 'block';
-        } else {
-            imagen.style.display = 'none';
+document.addEventListener('DOMContentLoaded', function() {
+    const mapaContainer = document.getElementById('mapa-visualizacion');
+    if (mapaContainer) {
+        const mapaId = mapaContainer.dataset.mapaId;
+        if (mapaId) {
+            cargarDatosMapa(mapaId);
         }
-    } else {
-        document.getElementById('tooltip-nombre').textContent = getNombreMunicipio(municipioId);
-        document.getElementById('tooltip-info').textContent = 'Sin información configurada';
-        document.getElementById('tooltip-imagen').style.display = 'none';
     }
-    
-    tooltip.style.display = 'block';
-    moverTooltip(event);
-}
+});
 
-// Ocultar información
-function ocultarInfo() {
-    document.getElementById('tooltip-municipio').style.display = 'none';
-}
+let configuracionesMunicipios = {};
 
-// Mover tooltip con el cursor
-function moverTooltip(event) {
-    const tooltip = document.getElementById('tooltip-municipio');
-    tooltip.style.left = (event.pageX + 10) + 'px';
-    tooltip.style.top = (event.pageY + 10) + 'px';
-}
-
-// Cargar datos del mapa
-async function cargarDatosMapa() {
-    const mapaId = document.getElementById('mapa-visualizacion').dataset.mapaId;
-    
+async function cargarDatosMapa(mapaId) {
     try {
         const response = await fetch(`/api/mapa/${mapaId}`);
         const data = await response.json();
-        
+
         if (data.success) {
-            datosMapaActual = data;
-            aplicarConfiguracionesMunicipios(data.municipios);
+            // Guardar configuraciones y aplicar colores
+            data.municipios.forEach(municipio => {
+                configuracionesMunicipios[municipio.municipio_id] = municipio;
+                const municipioElement = document.getElementById(municipio.municipio_id);
+                if (municipioElement) {
+                    municipioElement.style.fill = municipio.color;
+                }
+            });
+
+            // Asignar eventos de tooltip a todos los municipios
+            document.querySelectorAll('.municipio-path').forEach(path => {
+                path.addEventListener('mouseover', (event) => mostrarInfo(path.id, event));
+                path.addEventListener('mouseout', ocultarInfo);
+                path.addEventListener('mousemove', moverTooltip);
+            });
+
+            // Cargar tabla de estadísticas
             cargarTablaEstadisticas(data.tabla);
         } else {
             console.error('Error al cargar datos del mapa:', data.error);
@@ -64,30 +46,52 @@ async function cargarDatosMapa() {
     }
 }
 
-// Aplicar configuraciones de municipios
-function aplicarConfiguracionesMunicipios(municipios) {
-    municipios.forEach(municipio => {
-        configuracionesMunicipiosVisualizacion[municipio.municipio_id] = municipio;
+function mostrarInfo(municipioId, event) {
+    const tooltip = document.getElementById('tooltip-municipio');
+    const config = configuracionesMunicipios[municipioId];
+    
+    if (config) {
+        document.getElementById('tooltip-nombre').textContent = config.municipio_nombre;
+        document.getElementById('tooltip-info').textContent = config.informacion || 'Sin información disponible.';
         
-        // Aplicar color al municipio
-        const municipioElement = document.getElementById('view-' + municipio.municipio_id);
-        if (municipioElement) {
-            municipioElement.style.fill = municipio.color;
+        const imagen = document.getElementById('tooltip-imagen');
+        if (config.imagen_url) {
+            imagen.src = config.imagen_url;
+            imagen.style.display = 'block';
+        } else {
+            imagen.style.display = 'none';
         }
-    });
+    } else {
+        const nombreAmigable = municipioId.replace(/([A-Z])/g, ' $1').trim();
+        document.getElementById('tooltip-nombre').textContent = nombreAmigable;
+        document.getElementById('tooltip-info').textContent = 'Sin información configurada.';
+        document.getElementById('tooltip-imagen').style.display = 'none';
+    }
+    
+    tooltip.style.display = 'block';
+    moverTooltip(event);
 }
 
-// Cargar tabla de estadísticas
+function ocultarInfo() {
+    document.getElementById('tooltip-municipio').style.display = 'none';
+}
+
+function moverTooltip(event) {
+    const tooltip = document.getElementById('tooltip-municipio');
+    // Se añade un pequeño offset para que el tooltip no tape el cursor
+    tooltip.style.left = (event.pageX + 15) + 'px';
+    tooltip.style.top = (event.pageY + 15) + 'px';
+}
+
 function cargarTablaEstadisticas(tablaDatos) {
     const container = document.getElementById('tabla-estadisticas');
     
     if (!tablaDatos || !tablaDatos.datos || tablaDatos.datos.length === 0) {
-        container.innerHTML = '<p>No hay datos estadísticos disponibles</p>';
+        container.innerHTML = '<p>No hay datos estadísticos disponibles.</p>';
         return;
     }
     
     let tablaHTML = '<table class="stats-table"><tbody>';
-    
     tablaDatos.datos.forEach(fila => {
         tablaHTML += '<tr>';
         fila.forEach(celda => {
@@ -99,8 +103,3 @@ function cargarTablaEstadisticas(tablaDatos) {
     tablaHTML += '</tbody></table>';
     container.innerHTML = tablaHTML;
 }
-
-// Inicialización para visualización
-document.addEventListener('DOMContentLoaded', function() {
-    cargarDatosMapa();
-});

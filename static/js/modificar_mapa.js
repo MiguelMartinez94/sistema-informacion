@@ -35,7 +35,7 @@ async function cargarDatosMapaModificacion() {
                 configuracionesOriginales[municipio.municipio_id] = municipio;
                 
                 // Aplicar color al municipio
-                const municipioElement = document.getElementById('edit-' + municipio.municipio_id);
+                const el = document.getElementById(municipio.municipio_id);
                 if (municipioElement) {
                     municipioElement.style.fill = municipio.color;
                 }
@@ -65,7 +65,7 @@ function seleccionarMunicipioModificar(municipioId) {
     
     // Seleccionar nuevo municipio
     municipioActual = municipioId;
-    const municipioElement = document.getElementById('edit-' + municipioId);
+    const municipioElement = document.getElementById(municipioId);
     municipioElement.classList.add('municipio-seleccionado');
     
     // Actualizar interfaz
@@ -96,7 +96,7 @@ function aplicarModificacion() {
     const imagenFile = document.getElementById('imagen-municipio-modificar').files[0];
 
     // Aplicar color visualmente
-    const municipioElement = document.getElementById('edit-' + municipioActual);
+    const municipioElement = document.getElementById(municipioActual);
     municipioElement.style.fill = color;
 
     // Actualizar configuración

@@ -5,6 +5,7 @@
 from flask import jsonify, request
 from controllers.api import api_bp
 from models.models import Mapa, MunicipioConfiguracion, TablaDatos, Municipio
+import json
 
 @api_bp.route('/mapas')
 def get_mapas():
@@ -34,7 +35,11 @@ def get_mapa(mapa_id):
         
         municipios = MunicipioConfiguracion.obtener_por_mapa(mapa_id)
         tabla = TablaDatos.obtener_por_mapa(mapa_id)
-        
+
+        # Decodificar el JSON de la tabla si existe
+        if tabla and 'datos' in tabla:
+            tabla['datos'] = json.loads(tabla['datos'])
+
         return jsonify({
             'success': True,
             'mapa': mapa,

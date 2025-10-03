@@ -1,7 +1,3 @@
-<!-- ===============================
-templates/index.html - PÁGINA PRINCIPAL
-=============================== -->
-
 {% extends "base.html" %}
 
 {% block title %}Inicio - Sistema de Mapas Querétaro{% endblock %}
@@ -11,12 +7,12 @@ templates/index.html - PÁGINA PRINCIPAL
     <header class="main-header">
         <h1>Sistema de Mapas Interactivos - Querétaro</h1>
         <nav class="main-nav">
-            <button onclick="window.location.href='{{ url_for('main.crear_mapa') }}'" class="btn btn-primary">
+            <a href="{{ url_for('main.crear_mapa') }}" class="btn btn-primary">
                 Crear Mapa
-            </button>
-            <button onclick="window.location.href='{{ url_for('main.modificar_mapa') }}'" class="btn btn-secondary">
+            </a>
+            <a href="{{ url_for('main.modificar_mapa') }}" class="btn btn-secondary">
                 Modificar Mapa
-            </button>
+            </a>
         </nav>
     </header>
     
@@ -25,9 +21,9 @@ templates/index.html - PÁGINA PRINCIPAL
             <h2>Indicadores</h2>
             <div class="indicadores-list">
                 {% for mapa in mapas %}
-                    <button onclick="verMapa({{ mapa.id }})" class="indicator-btn" data-mapa-id="{{ mapa.id }}">
+                    <a href="{{ url_for('main.ver_mapa', mapa_id=mapa.id) }}" class="indicator-btn" data-mapa-id="{{ mapa.id }}">
                         {{ mapa.nombre }}
-                    </button>
+                    </a>
                 {% endfor %}
                 
                 {% if not mapas %}
@@ -45,12 +41,4 @@ templates/index.html - PÁGINA PRINCIPAL
         </section>
     </main>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    function verMapa(mapaId) {
-        window.location.href = `/ver/${mapaId}`;
-    }
-</script>
 {% endblock %}
