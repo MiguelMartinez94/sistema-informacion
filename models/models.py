@@ -163,6 +163,18 @@ class MunicipioConfiguracion:
                 columns = [desc[0] for desc in cursor.description]
                 return dict(zip(columns, result))
             return None
+    
+    @staticmethod
+    def eliminar_por_mapa(mapa_id):
+        """Elimina todas las configuraciones de un mapa específico."""
+        db = get_db()
+        cursor = db.cursor()
+        
+        # Asumiendo MySQL
+        cursor.execute('DELETE FROM municipios_configuracion WHERE mapa_id = %s', (mapa_id,))
+        
+        db.commit()
+        return cursor.rowcount
 
 class TablaDatos:
     def __init__(self, mapa_id, filas, columnas, datos=None):

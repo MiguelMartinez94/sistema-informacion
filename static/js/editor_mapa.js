@@ -1,5 +1,5 @@
 // ===============================
-// static/js/editor_mapa.js
+// static/js/editor_mapa.js (CORREGIDO)
 // ===============================
 
 // Variables globales
@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Configurar listeners para los municipios
     document.querySelectorAll('.municipio-path').forEach(path => {
-        const id = path.id.replace('municipio-', '');
-        path.setAttribute('onclick', `seleccionarMunicipio('${id}')`);
+        // CORRECCIÓN: El ID del path ya es el correcto, no necesita prefijos.
+        path.setAttribute('onclick', `seleccionarMunicipio('${path.id}')`);
     });
 
     // Listener para la subida de imagen
@@ -47,14 +47,15 @@ async function cargarDatosParaModificar(id) {
             // Cargar configuraciones de municipios
             data.municipios.forEach(municipio => {
                 configuracionesMunicipios[municipio.municipio_id] = municipio;
-                const el = document.getElementById(`municipio-${municipio.municipio_id}`);
+                // CORRECCIÓN: Se busca el ID directamente, sin el prefijo 'edit-'
+                const el = document.getElementById(municipio.municipio_id);
                 if (el) el.style.fill = municipio.color;
             });
             
             // Cargar tabla
             if (data.tabla) {
                 datosTabla = data.tabla;
-                datosTabla.datos = JSON.parse(datosTabla.datos_json); // Asegurarse de que 'datos' es un array
+                // La API ya devuelve 'datos' como un array, no es necesario parsear de nuevo.
                 generarTabla(true);
             }
         } else {
@@ -71,7 +72,8 @@ function seleccionarMunicipio(municipioId) {
         path.classList.remove('seleccionado');
     });
     
-    const municipioElement = document.getElementById(`municipio-${municipioId}`);
+    // CORRECCIÓN: Se busca el ID directamente
+    const municipioElement = document.getElementById(municipioId);
     if(municipioElement) {
       municipioElement.classList.add('seleccionado');
     }
@@ -89,6 +91,7 @@ function seleccionarMunicipio(municipioId) {
         mostrarPreviewImagen(config.imagen_url);
     } else {
         document.getElementById('preview-imagen').innerHTML = '';
+        document.getElementById('imagen-municipio').value = ''; // Limpiar input de archivo
     }
 }
 
@@ -102,14 +105,18 @@ async function aplicarConfiguracion() {
     const info = document.getElementById('info-municipio').value;
     const imagenFile = document.getElementById('imagen-municipio').files[0];
 
-    document.getElementById(`municipio-${municipioActual}`).style.fill = color;
+    // CORRECCIÓN: Se busca el ID directamente
+    document.getElementById(municipioActual).style.fill = color;
 
+    // Crear o actualizar la configuración en memoria
     configuracionesMunicipios[municipioActual] = {
-        ...configuracionesMunicipios[municipioActual],
+        ...configuracionesMunicipios[municipioActual], // Mantener datos existentes como el nombre
+        municipio_id: municipioActual,
         color: color,
         informacion: info,
     };
 
+    // Si se subió una nueva imagen
     if (imagenFile) {
         const response = await subirImagen(imagenFile);
         if (response.success) {
@@ -118,6 +125,10 @@ async function aplicarConfiguracion() {
         } else {
             alert('Error al subir imagen: ' + response.error);
         }
+    }
+    // Si no hay imagen nueva, pero ya existía una, la mantenemos
+    else if (!configuracionesMunicipios[municipioActual].imagen_url) {
+        configuracionesMunicipios[municipioActual].imagen_url = null;
     }
 }
 
@@ -139,7 +150,7 @@ async function subirImagen(file) {
 
 function mostrarPreviewImagen(url) {
     document.getElementById('preview-imagen').innerHTML = 
-        `<img src="${url}" alt="Preview" style="max-width: 100px; max-height: 100px; margin-top: 10px;">`;
+        `<img src="${url}" alt="Vista previa" style="max-width: 100px; max-height: 100px; margin-top: 10px;">`;
 }
 
 async function guardarMapa() {
@@ -155,7 +166,7 @@ async function guardarMapa() {
 
     const datosParaEnviar = new URLSearchParams();
     datosParaEnviar.append('nombre', nombreMapa);
-    datosParaEnviar.append('descripcion', ''); // Puedes agregar un campo para esto si quieres
+    datosParaEnviar.append('descripcion', '');
     datosParaEnviar.append('municipios_data', JSON.stringify(configuracionesMunicipios));
     datosParaEnviar.append('tabla_data', JSON.stringify(datosTabla));
 
@@ -167,8 +178,8 @@ async function guardarMapa() {
             body: datosParaEnviar
         });
         
-        if (response.ok) {
-            window.location.href = '/'; // Redirigir al inicio
+        if (response.redirected) {
+            window.location.href = response.url;
         } else {
             alert('Error al guardar el mapa');
         }
@@ -176,5 +187,3 @@ async function guardarMapa() {
         alert('Error de conexión: ' + error.message);
     }
 }
-
-// ... (El resto de las funciones para la tabla, si las necesitas)

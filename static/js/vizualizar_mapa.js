@@ -1,5 +1,5 @@
 // ===============================
-// static/js/visualizar_mapa.js
+// static/js/visualizar_mapa.js (CORREGIDO)
 // ===============================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -23,6 +23,7 @@ async function cargarDatosMapa(mapaId) {
             // Guardar configuraciones y aplicar colores
             data.municipios.forEach(municipio => {
                 configuracionesMunicipios[municipio.municipio_id] = municipio;
+                // CORRECCIÓN: Se busca el ID directamente, sin el prefijo 'view-'
                 const municipioElement = document.getElementById(municipio.municipio_id);
                 if (municipioElement) {
                     municipioElement.style.fill = municipio.color;
@@ -50,10 +51,13 @@ function mostrarInfo(municipioId, event) {
     const tooltip = document.getElementById('tooltip-municipio');
     const config = configuracionesMunicipios[municipioId];
     
+    // Obtener el nombre legible del municipio desde el mismo objeto de configuración
+    const nombreMunicipio = config ? config.municipio_nombre : municipioId.replace(/([A-Z])/g, ' $1').trim();
+
+    document.getElementById('tooltip-nombre').textContent = nombreMunicipio;
+
     if (config) {
-        document.getElementById('tooltip-nombre').textContent = config.municipio_nombre;
         document.getElementById('tooltip-info').textContent = config.informacion || 'Sin información disponible.';
-        
         const imagen = document.getElementById('tooltip-imagen');
         if (config.imagen_url) {
             imagen.src = config.imagen_url;
@@ -62,8 +66,6 @@ function mostrarInfo(municipioId, event) {
             imagen.style.display = 'none';
         }
     } else {
-        const nombreAmigable = municipioId.replace(/([A-Z])/g, ' $1').trim();
-        document.getElementById('tooltip-nombre').textContent = nombreAmigable;
         document.getElementById('tooltip-info').textContent = 'Sin información configurada.';
         document.getElementById('tooltip-imagen').style.display = 'none';
     }
@@ -78,7 +80,6 @@ function ocultarInfo() {
 
 function moverTooltip(event) {
     const tooltip = document.getElementById('tooltip-municipio');
-    // Se añade un pequeño offset para que el tooltip no tape el cursor
     tooltip.style.left = (event.pageX + 15) + 'px';
     tooltip.style.top = (event.pageY + 15) + 'px';
 }
@@ -92,6 +93,8 @@ function cargarTablaEstadisticas(tablaDatos) {
     }
     
     let tablaHTML = '<table class="stats-table"><tbody>';
+    
+    // El JSON ya viene parseado desde la API
     tablaDatos.datos.forEach(fila => {
         tablaHTML += '<tr>';
         fila.forEach(celda => {

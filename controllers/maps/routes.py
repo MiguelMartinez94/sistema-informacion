@@ -16,6 +16,8 @@ def allowed_file(filename):
 
 @maps_bp.route('/guardar', methods=['POST'])
 @maps_bp.route('/actualizar/<int:mapa_id>', methods=['POST'])
+@maps_bp.route('/guardar', methods=['POST'])
+@maps_bp.route('/actualizar/<int:mapa_id>', methods=['POST'])
 def guardar_modificar_mapa(mapa_id=None):
     """Guardar un nuevo mapa o actualizar uno existente."""
     try:
@@ -24,6 +26,7 @@ def guardar_modificar_mapa(mapa_id=None):
 
         if not nombre:
             flash('El nombre del mapa es requerido', 'error')
+            # Ajustar a la ruta correcta para renderizar la plantilla de edición
             return redirect(url_for('main.crear_mapa'))
 
         if mapa_id is None:
@@ -31,14 +34,15 @@ def guardar_modificar_mapa(mapa_id=None):
             mapa_id = Mapa.crear(nombre, descripcion)
             flash_message = 'Mapa guardado exitosamente'
         else:
-            # Actualizar nombre del mapa (opcional)
-            mapa = Mapa.obtener_por_id(mapa_id)
-            if mapa and mapa['nombre'] != nombre:
-                # Aquí podrías agregar una función para actualizar el nombre si lo deseas
-                pass
+            # --- INICIO DE LA CORRECCIÓN ---
+            # Al actualizar, primero borramos las configuraciones antiguas.
+            MunicipioConfiguracion.eliminar_por_mapa(mapa_id)
+            # También podrías actualizar el nombre del mapa aquí si lo necesitas.
+            # Mapa.actualizar_nombre(mapa_id, nombre) # (Función hipotética)
             flash_message = 'Mapa actualizado exitosamente'
+            # --- FIN DE LA CORRECCIÓN ---
 
-        # Guardar configuraciones de municipios
+        # Guardar (o re-guardar) configuraciones de municipios
         municipios_data = request.form.get('municipios_data')
         if municipios_data:
             municipios = json.loads(municipios_data)
@@ -62,7 +66,8 @@ def guardar_modificar_mapa(mapa_id=None):
                 mapa_id=mapa_id,
                 filas=tabla_info.get('filas', 0),
                 columnas=tabla_info.get('columnas', 0),
-                datos=json.dumps(tabla_info.get('datos', []))  # Guardar como JSON string
+                # CORRECCIÓN: Evitar doble codificación JSON
+                datos=tabla_info.get('datos', [])
             )
             tabla.guardar()
 
@@ -75,7 +80,6 @@ def guardar_modificar_mapa(mapa_id=None):
             return redirect(url_for('main.modificar_mapa_especifico', mapa_id=mapa_id))
         else:
             return redirect(url_for('main.crear_mapa'))
-
 
 @maps_bp.route('/eliminar/<int:mapa_id>', methods=['POST'])
 def eliminar_mapa(mapa_id):
